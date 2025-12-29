@@ -1,10 +1,14 @@
 import { useState } from "react";
 
+import { ActionButton } from "./components/ActionButton";
+
 function App() {
   const [count, setCount] = useState(0);
 
   const handleDecrement = () => {
-    setCount((prev) => prev - 1);
+    if (count > 0) {
+      setCount((prev) => prev - 1);
+    }
   };
 
   const handleReset = () => {
@@ -12,7 +16,9 @@ function App() {
   };
 
   const handleIncrement = () => {
-    setCount((prev) => prev + 1);
+    if (count < 100) {
+      setCount((prev) => prev + 1);
+    }
   };
 
   return (
@@ -21,24 +27,21 @@ function App() {
         <h1 className="text-3xl text-center mb-10">Counter App</h1>
         <div className="text-9xl text-center font-bold mb-10">{count}</div>
         <div className="flex justify-around items-center">
-          <button
-            className="px-4 py-2 text-2xl text-white font-bold bg-orange-500 rounded cursor-pointer hover:opacity-75"
+          <ActionButton
+            label="-"
+            bgColor="bg-orange-500"
             onClick={handleDecrement}
-          >
-            -
-          </button>
-          <button
-            className="px-4 py-2 text-2xl text-white font-bold bg-black rounded cursor-pointer hover:opacity-75"
+          />
+          <ActionButton
+            label="reset"
+            bgColor="bg-black"
             onClick={handleReset}
-          >
-            reset
-          </button>
-          <button
-            className="px-4 py-2 text-2xl text-white font-bold bg-blue-500 rounded cursor-pointer hover:opacity-75"
+          />
+          <ActionButton
+            label="+"
+            bgColor="bg-blue-500"
             onClick={handleIncrement}
-          >
-            +
-          </button>
+          />
         </div>
       </div>
     </div>

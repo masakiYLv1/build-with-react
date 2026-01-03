@@ -2,12 +2,12 @@ import { useState } from "react";
 
 import { Start } from "./components/Start";
 import { Playing } from "./components/Playing";
-import { Resutl } from "./components/Resutl";
+import { Result } from "./components/Resutl";
 
 type GamePhase = "start" | "playing" | "result";
 
 function App() {
-  const [phase, setPhase] = useState<GamePhase>("playing");
+  const [phase, setPhase] = useState<GamePhase>("result");
 
   return (
     <div className="flex justify-center items-center h-screen bg-blue-50">
@@ -18,7 +18,7 @@ function App() {
         <div className="h-48 p-4 bg-amber-50 rounded-md">
           {phase === "start" && <Start />}
           {phase === "playing" && <Playing />}
-          {phase === "result" && <Resutl />}
+          {phase === "result" && <Result />}
         </div>
       </div>
     </div>

@@ -1,13 +1,11 @@
-import { useState } from "react";
-
 import { Start } from "./components/Start";
 import { Playing } from "./components/Playing";
 import { Result } from "./components/Resutl";
-
-type GamePhase = "start" | "playing" | "result";
+import { useClickGame } from "./hooks/useClickGame";
 
 function App() {
-  const [phase, setPhase] = useState<GamePhase>("result");
+  const { phase, timeLeft, count, startGame, click, resetGame } =
+    useClickGame();
 
   return (
     <div className="flex justify-center items-center h-screen bg-blue-50">
@@ -16,9 +14,11 @@ function App() {
           <h1 className="text-xl">クリック連打ゲーム</h1>
         </div>
         <div className="h-48 p-4 bg-amber-50 rounded-md">
-          {phase === "start" && <Start />}
-          {phase === "playing" && <Playing />}
-          {phase === "result" && <Result />}
+          {phase === "start" && <Start onClick={startGame} />}
+          {phase === "playing" && (
+            <Playing onClick={click} count={count} timeLeft={timeLeft} />
+          )}
+          {phase === "result" && <Result onClick={resetGame} count={count} />}
         </div>
       </div>
     </div>

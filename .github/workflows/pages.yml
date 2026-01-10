@@ -1,0 +1,70 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            apps/001-counter/package-lock.json
+            apps/002-click-game/package-lock.json
+            apps/003-timer/package-lock.json
+
+      - name: Build 001-counter
+        working-directory: apps/001-counter
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build 002-click-game
+        working-directory: apps/002-click-game
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build 003-timer
+        working-directory: apps/003-timer
+        run: |
+          npm ci
+          npm run build
+
+      - name: Assemble Pages site
+        run: |
+          mkdir -p site/001-counter site/002-click-game site/003-timer
+          cp -r apps/001-counter/dist/* site/001-counter/
+          cp -r apps/002-click-game/dist/* site/002-click-game/
+          cp -r apps/003-timer/dist/* site/003-timer/
+          cp index.html site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

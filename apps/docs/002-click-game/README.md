@@ -54,3 +54,9 @@
 ---
 
 ## 学んだこと
+
+- README を読んですぐに、コードを書き始めてしまい、途中で迷子になってしまっため、一度やりなおすことにしました
+- src/docs フォルダに memo.md を作成し、作業の進め方を整理することでコードの書きやすさを向上させた
+- ゲーム画面 UI を 3 等分（コンポーネント化）することで一つの作業に集中することができた
+- JavaScript で学習した setTimeout 関数を復習することができた
+- useEffect の処理を学びまた、useEffectEvent を使用して「Error: Calling setState synchronously within an effect can trigger cascading renders」エラーの対応の仕方を学んだ。

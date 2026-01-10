@@ -4,6 +4,6 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/build-with-react/apps/002-click-game/",
+  base: "./",
   plugins: [react(), tailwindcss()],
 });

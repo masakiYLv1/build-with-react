@@ -18,7 +18,7 @@ export const Controls = ({
       {status === "idle" && (
         <div className="flex justify-center">
           <button
-            className="px-6 py-2 w-full bg-lime-500 text-white rounded cursor-pointer"
+            className="px-6 py-2 w-full bg-lime-500 text-white rounded cursor-pointer hover:opacity-75"
             onClick={onStart}
           >
             開始
@@ -30,12 +30,12 @@ export const Controls = ({
         <div className="flex gap-2">
           <button
             onClick={onStop}
-            className="flex-1 px-6 py-2 bg-lime-500 text-white rounded cursor-pointer"
+            className="flex-1 px-6 py-2 bg-lime-500 text-white rounded cursor-pointer hover:opacity-75"
           >
             停止
           </button>
           <button
-            className="flex-1 px-6 py-2 bg-lime-500 text-white rounded cursor-pointer"
+            className="flex-1 px-6 py-2 bg-lime-500 text-white rounded cursor-pointer hover:opacity-75"
             onClick={onReset}
           >
             リセット
@@ -47,12 +47,12 @@ export const Controls = ({
         <div className="flex gap-2">
           <button
             onClick={onStart}
-            className="flex-1 px-6 py-2 bg-lime-500 text-white rounded cursor-pointer"
+            className="flex-1 px-6 py-2 bg-lime-500 text-white rounded cursor-pointer hover:opacity-75"
           >
             再生
           </button>
           <button
-            className="flex-1 px-6 py-2 bg-lime-500 text-white rounded cursor-pointer"
+            className="flex-1 px-6 py-2 bg-lime-500 text-white rounded cursor-pointer hover:opacity-75"
             onClick={onReset}
           >
             リセット

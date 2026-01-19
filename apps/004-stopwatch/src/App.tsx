@@ -1,4 +1,62 @@
+import { useRef, useState } from "react";
+
+// 表示
+type Status = "idle" | "running" | "stopped";
+
+// ラップ
+type Lap = {
+  lap: number;
+  lapTime: number; // ms
+  totalTime: number; // ms
+};
+
 export default function App() {
+  const [status, setStatus] = useState<Status>("idle");
+  const [laps, setLaps] = useState<Lap[]>([]);
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
+
+  const startTimeRef = useRef<number>(0);
+  const intervalRef = useRef<number | null>(null);
+
+  const handleStart = () => {
+    if (status === "running") return;
+    setStatus("running");
+    // 再開に対応するための処理
+    startTimeRef.current = Date.now() - elapsedTime;
+
+    // 0.01秒ごとに経過時間を計算する
+    intervalRef.current = setInterval(() => {
+      setElapsedTime(Date.now() - startTimeRef.current);
+    }, 10);
+  };
+
+  const handleStop = () => {
+    if (intervalRef.current === null) return;
+
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+    setStatus("stopped");
+  };
+
+  const handleReset = () => {
+    if (intervalRef.current !== null) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    setElapsedTime(0);
+    setLaps([]);
+    setStatus("idle");
+  };
+
+  // ボタン onclickとlabel
+  const isRunning = status === "running";
+  const mainButtonLabel = isRunning
+    ? "ストップ"
+    : status === "stopped"
+      ? "再開"
+      : "スタート";
+  const mainButtonHandler = isRunning ? handleStop : handleStart;
+
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-950 to-slate-900 text-slate-100">
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
@@ -44,7 +102,7 @@ export default function App() {
                   </span>
                   <span className="pb-2 text-2xl text-slate-300">.</span>
                   <span className="pb-2 text-2xl text-slate-200 sm:text-3xl">
-                    000
+                    {elapsedTime}
                   </span>
                 </div>
               </div>
@@ -53,8 +111,9 @@ export default function App() {
                 <button
                   type="button"
                   className="col-span-2 inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-indigo-500/20 ring-1 ring-inset ring-white/10 transition hover:bg-indigo-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300/80 active:translate-y-px"
+                  onClick={mainButtonHandler}
                 >
-                  スタート
+                  {mainButtonLabel}
                 </button>
 
                 <button
@@ -69,6 +128,7 @@ export default function App() {
                 <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/7 hover:text-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/60 disabled:cursor-not-allowed disabled:opacity-40"
+                  onClick={handleReset}
                 >
                   リセット
                 </button>

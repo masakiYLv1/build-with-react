@@ -10,7 +10,7 @@
 
 ## ググり調査やメモ
 
-- 003-timerとはまた違うUIにする（Googleで検索した「ストップウォッチ」を参考）
+- 003-timerとはまた違うUIにする
 - 小数第3以下まで表示：mm:ss.xxx
 - ストップウォッチのラップは2種類あること
   - スプリット（区間タイム）
@@ -19,20 +19,21 @@
   - スタートから現在までの合計時間
 - ラップ表示にラップ数（Lap 1,Lap 2）を表示する
 - state（状態）は**表示用文字列を持たない**
+- useRefを使用する
 
 ## 状態(state)
 
 - status
-  - ブラウザが表示された状態（初期状態）：idle
-  - 計測中：running
-  - 停止：stopped
-- ラップ数（配列で保持）：laps
-- 経過時間（ミリ秒）：elapsedTime
+  - ブラウザが表示された状態（初期状態）： idle
+  - 計測中： running
+  - 停止： stopped
+- ラップ数（配列で保持）： laps
+- 経過時間（ミリ秒）： elapsedTime
 
 ## 型定義
 
 ```ts
-// 表示画面切り替え
+// 表示
 type Status = "idle" | "running" | "stopped";
 
 // ラップ
@@ -58,7 +59,7 @@ type Lap = {
   - Date.now()を用いて実時間差分で、elapsedTime を算出
   - 表示時に mm:ss.xx にフォーマット
 - ラップボタンを押す
-  - laps = [{ lap: 1, lapTime: 10730, totalTime: 10730 }] <!-- 10730 → 00:00:10.73-->
+  - laps = [{ lap: 1, lapTime: 10730, totalTime: 10730 }] <!-- 10730 → 00:00:10.73 -->
 - 停止ボタンを押す
   - status = "stopped"
   - elapsedTime 停止

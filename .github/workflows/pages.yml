@@ -56,7 +56,7 @@ jobs:
 
       - name: Assemble Pages site
         run: |
-          mkdir -p site/001-counter site/002-click-game site/003-timer
+          mkdir -p site/001-counter site/002-click-game site/003-timer site/004-stopwatch
           cp -r apps/001-counter/dist/* site/001-counter/
           cp -r apps/002-click-game/dist/* site/002-click-game/
           cp -r apps/003-timer/dist/* site/003-timer/

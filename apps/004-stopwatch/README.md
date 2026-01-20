@@ -1,73 +1,70 @@
-# React + TypeScript + Vite
+# 004 ストップウォッチ（ラップ付き）
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 概要
 
-Currently, two official plugins are available:
+開始・停止・リセットができるストップウォッチに、
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**ラップ（途中経過の記録）機能** を追加したアプリです。
 
-## React Compiler
+003 で実装したタイマー（ストップウォッチ）を拡張し、
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**配列を使った state 管理** や **複数状態の組み合わせ** に慣れることを目的とします。
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 問題
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+ラップ機能付きのストップウォッチを作成してください。
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 目的
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- `useState` を使った複数 state の管理に慣れる
+- 配列（ラップ一覧）を state として扱う練習をする
+- 状態（動作中 / 停止中）に応じた UI 切り替えを実装する
+- 処理と表示の役割を分けて考える力を身につける
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 達成条件
+
+- 「開始」ボタンでストップウォッチが動作する
+- 動作中は時間が 1 秒ずつ増加する
+- 「停止」ボタンで時間が止まる
+- 「再開」ボタンで続きから再開できる
+- 「ラップ」ボタンで現在の経過時間を記録できる
+- ラップはリストとして画面に表示される
+- 「リセット」ボタンで時間とラップが初期状態に戻る
+- リロードしてもエラーなく動作する
+
+---
+
+## 使用技術
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+
+※ 要件を満たしていれば、他のライブラリやツールを使用してもよい
+
+---
+
+## 機能
+
+- ストップウォッチ開始
+- ストップウォッチ停止 / 再開
+- 経過時間の表示
+- ラップ記録機能
+- ラップ一覧表示
+- リセット機能（時間・ラップを初期化）
+
+## 学んだこと
+
+- AIを使用してUIを構築したが、TailwindCSSでここまできれいなデザインになったことに驚いた
+- 003-timerとは違う方法で「開始・停止・再開・リセット」を実装できた
+- 新しいフック useRef に出会えた
+- 「時・分・秒・ミリ秒」を求める計算式を学べた（数学は苦手…）
+- ラップは「差分 = 今の時間 - 前回ラップ時間」ここの理解に苦労した
+- JavaScriptの知識がとにかく必要だと改めて認識した

@@ -48,6 +48,52 @@ export default function App() {
     setStatus("idle");
   };
 
+  const handleLap = () => {
+    if (status !== "running") return;
+
+    // 前回ラップ時点の totalTime を覚えておき、今の elapsedTime との差を取る
+    setLaps((prev) => {
+      // 前回ラップ時点のtotalTime、存在しない場合は0
+      const lastTotal = prev.at(-1)?.totalTime ?? 0;
+      // その時点の合計時間
+      const currentTotal = elapsedTime;
+
+      //
+      return [
+        ...prev,
+        {
+          lap: prev.length + 1,
+          lapTime: currentTotal - lastTotal,
+          totalTime: currentTotal,
+        },
+      ];
+    });
+  };
+
+  // 時間を表示するためのフォーマット関数
+  const formatTime = (ms: number) => {
+    const hours = Math.floor(ms / 1000 / 60 / 60)
+      .toString()
+      .padStart(2, "0");
+    const minutes = Math.floor((ms / 1000 / 60) % 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = Math.floor((ms / 1000) % 60)
+      .toString()
+      .padStart(2, "0");
+    const milliseconds = Math.floor(ms % 1000)
+      .toString()
+      .padStart(3, "0");
+
+    return { hours, minutes, seconds, milliseconds };
+  };
+
+  // ラップ用のフォーマット
+  const formatTimeText = (ms: number) => {
+    const { hours, minutes, seconds, milliseconds } = formatTime(ms);
+    return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+  };
+
   // ボタン onclickとlabel
   const isRunning = status === "running";
   const mainButtonLabel = isRunning
@@ -56,6 +102,27 @@ export default function App() {
       ? "再開"
       : "スタート";
   const mainButtonHandler = isRunning ? handleStop : handleStart;
+
+  // 表示用のフォーマット
+  const { hours, minutes, seconds, milliseconds } = formatTime(elapsedTime);
+
+  // 状態用（「as const」でreadonlyにする）
+  const statusConfig = {
+    idle: {
+      label: "待機中",
+      dot: "bg-slate-400/90",
+    },
+    running: {
+      label: "計測中",
+      dot: "bg-emerald-400/90",
+    },
+    stopped: {
+      label: "一時停止中",
+      dot: "bg-amber-400/90",
+    },
+  } as const;
+
+  const { label, dot } = statusConfig[status];
 
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-950 to-slate-900 text-slate-100">
@@ -70,8 +137,8 @@ export default function App() {
             </p>
           </div>
           <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/7 px-3 py-1 text-xs text-slate-200 sm:flex">
-            <span className="h-2 w-2 rounded-full bg-emerald-400/90" />
-            待機中
+            <span className={`h-2 w-2 rounded-full ${dot}`} />
+            {label}
           </div>
         </header>
 
@@ -90,19 +157,19 @@ export default function App() {
               <div className="mt-5 rounded-2xl bg-linear-to-b from-white/10 to-white/5 p-5 ring-1 ring-white/10">
                 <div className="flex items-end justify-center gap-2 font-mono tabular-nums">
                   <span className="text-5xl font-semibold tracking-tight sm:text-6xl">
-                    00
+                    {hours}
                   </span>
                   <span className="pb-2 text-2xl text-slate-300">:</span>
                   <span className="text-5xl font-semibold tracking-tight sm:text-6xl">
-                    00
+                    {minutes}
                   </span>
                   <span className="pb-2 text-2xl text-slate-300">:</span>
                   <span className="text-5xl font-semibold tracking-tight sm:text-6xl">
-                    00
+                    {seconds}
                   </span>
                   <span className="pb-2 text-2xl text-slate-300">.</span>
                   <span className="pb-2 text-2xl text-slate-200 sm:text-3xl">
-                    {elapsedTime}
+                    {milliseconds}
                   </span>
                 </div>
               </div>
@@ -119,6 +186,7 @@ export default function App() {
                 <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-xl bg-white/7 px-4 py-3 text-sm font-semibold text-slate-100 ring-1 ring-inset ring-white/10 transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/60 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-40"
+                  onClick={handleLap}
                 >
                   ラップ
                 </button>
@@ -160,15 +228,19 @@ export default function App() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10">
-                  <tr className="bg-white/7">
-                    <td className="px-6 py-3 text-left text-slate-200">1</td>
-                    <td className="px-6 py-3 text-right font-mono tabular-nums text-slate-100">
-                      00:00:00.000
-                    </td>
-                    <td className="px-6 py-3 text-right font-mono tabular-nums text-slate-100">
-                      00:00:00.000
-                    </td>
-                  </tr>
+                  {laps.map((lap) => (
+                    <tr className="bg-white/7" key={lap.lap}>
+                      <td className="px-6 py-3 text-left text-slate-200">
+                        {lap.lap}
+                      </td>
+                      <td className="px-6 py-3 text-right font-mono tabular-nums text-slate-100">
+                        {formatTimeText(lap.lapTime)}
+                      </td>
+                      <td className="px-6 py-3 text-right font-mono tabular-nums text-slate-100">
+                        {formatTimeText(lap.totalTime)}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

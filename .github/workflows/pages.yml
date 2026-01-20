@@ -28,6 +28,7 @@ jobs:
             apps/001-counter/package-lock.json
             apps/002-click-game/package-lock.json
             apps/003-timer/package-lock.json
+            apps/004-stopwatch/package-lock.json
 
       - name: Build 001-counter
         working-directory: apps/001-counter
@@ -47,12 +48,19 @@ jobs:
           npm ci
           npm run build
 
+      - name: Build 004-stopwatch
+        working-directory: apps/004-stopwatch
+        run: |
+          npm ci
+          npm run build
+
       - name: Assemble Pages site
         run: |
           mkdir -p site/001-counter site/002-click-game site/003-timer
           cp -r apps/001-counter/dist/* site/001-counter/
           cp -r apps/002-click-game/dist/* site/002-click-game/
           cp -r apps/003-timer/dist/* site/003-timer/
+          cp -r apps/004-stopwatch/dist/* site/004-stopwatch/
           cp index.html site/index.html
 
       - uses: actions/upload-pages-artifact@v3
